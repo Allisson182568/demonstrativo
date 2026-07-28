@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Belmonte — Demonstrativo consolidado (Jun/25 a Jun/26)</title>
+<style>
+  :root{
+    --navy:#0d2340; --navy-2:#16305a; --gold:#c99a3d; --gold-light:#e9c877;
+    --bg:#f5f3ee; --card:#ffffff; --line:#e3ded2; --text:#1c1c1a; --muted:#6b675e;
+    --up:#b23b3b; --down:#1f7a4d; --flag:#f6e6c8; --flag-text:#7a5410;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  header{background:var(--navy);color:#fff;padding:28px 32px 22px}
+  header h1{margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:.2px}
+  header p{margin:0;color:#c9d3e2;font-size:13px}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-34px 0 24px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;box-shadow:0 2px 10px rgba(13,35,64,.06)}
+  .kpi .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+  .kpi .val{font-size:20px;font-weight:600;color:var(--navy)}
+  .kpi .sub{font-size:12px;color:var(--down);margin-top:2px}
+  nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+  nav button{border:1px solid var(--line);background:var(--card);color:var(--navy-2);padding:9px 14px;border-radius:20px;font-size:13px;cursor:pointer;font-weight:500}
+  nav button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  nav button:hover:not(.active){border-color:var(--gold)}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:18px}
+  .panel h2{margin:0 0 4px;font-size:18px;color:var(--navy)}
+  .panel .desc{font-size:13px;color:var(--muted);margin:0 0 18px}
+  .flag-box{background:var(--flag);color:var(--flag-text);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:18px;display:none}
+  .flag-box.show{display:block}
+  canvas{max-height:220px}
+  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:13px}
+  th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.3px}
+  tbody tr:hover{background:#faf8f3}
+  .var-up{color:var(--up);font-weight:500}
+  .var-down{color:var(--down);font-weight:500}
+  .var-flat{color:var(--muted)}
+  .anomaly{background:var(--flag)}
+  .anomaly td:first-child::before{content:"⚑ ";color:var(--flag-text)}
+  footer{max-width:1080px;margin:0 auto;padding:0 20px 50px;font-size:12px;color:var(--muted);line-height:1.7}
+  footer h3{font-size:13px;color:var(--navy);margin:20px 0 6px}
+  .src-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 16px}
+  @media (max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}.src-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Residencial Belmonte — Demonstrativo consolidado</h1>
+  <p>13 balancetes mensais (Jun/2025 a Jun/2026) reunidos a partir dos PDFs oficiais da B&amp;S Administradora</p>
+</header>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
+  <nav id="nav"></nav>
+
+  <div class="panel">
+    <h2 id="catTitle"></h2>
+    <p class="desc" id="catDesc"></p>
+    <div class="flag-box" id="flagBox"></div>
+    <canvas id="chart"></canvas>
+    <table>
+      <thead><tr><th>Mês</th><th>Valor (R$)</th><th>Variação vs. mês anterior</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <h3>Fontes (balancetes originais em PDF, B&amp;S Administradora de Condomínios)</h3>
+  <div class="src-grid">
+    <div>Jun/2025 — Demonstrativo Jun/2025 (detalhado)</div>
+    <div>Jul/2025 — Demonstrativo Jul/2025 (detalhado)</div>
+    <div>Ago/2025 — Demonstrativo Ago/2025 (detalhado)</div>
+    <div>Set/2025 — Demonstrativo Set/2025</div>
+    <div>Out/2025 — Demonstrativo Out/2025</div>
+    <div>Nov/2025 — Demonstrativo Nov/2025</div>
+    <div>Dez/2025 — Demonstrativo Dez/2025</div>
+    <div>Jan/2026 — Demonstrativo Jan/2026</div>
+    <div>Fev/2026 — Demonstrativo Fev/2026</div>
+    <div>Mar/2026 — Demonstrativo Mar/2026</div>
+    <div>Abr/2026 — Demonstrativo Abr/2026</div>
+    <div>Mai/2026 — Demonstrativo Mai/2026</div>
+    <div>Jun/2026 — Demonstrativo Jun/2026</div>
+  </div>
+  <p style="margin-top:14px">Este documento é um consolidado independente para conferência dos associados — em caso de dúvida sobre qualquer valor, o PDF de origem do mês correspondente deve ser solicitado à administradora B&amp;S ou consultado no portal Superlógica (bscondominial.superlogica.net). Os campos sinalizados com ⚑ indicam variações fora do padrão que ainda não têm explicação documentada em ata ou comunicado.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const months = ["Jun/25","Jul/25","Ago/25","Set/25","Out/25","Nov/25","Dez/25","Jan/26","Fev/26","Mar/26","Abr/26","Mai/26","Jun/26"];
+
+const categories = {
+  seguranca: {
+    label: "Segurança terceirizada",
+    values: [44144.00,51600.00,45000.00,42525.00,42525.00,39150.00,39600.00,39600.00,39579.08,39579.08,39600.00,39600.00,450.00],
+    desc: "Linha \"Terceirizada Segurança\" em Despesas com Contratos Mensais.",
+    flag: "Contrato encerrado em jun/2026 (R$450 residual) e substituído por equipe própria — ver categoria \"Pessoal\". Valor variou entre R$39.579,08 e R$39.600,00 em meses adjacentes sem explicação (fev–mar/2026).",
+    anomalies: [12]
+  },
+  limpeza: {
+    label: "Limpeza terceirizada",
+    values: [17200.00,18450.00,17750.00,17500.00,17500.00,17500.00,18100.00,18100.00,18100.00,18100.00,18100.00,18100.00,23000.00],
+    desc: "Linha \"Terceirizada Limpeza\" em Despesas com Contratos Mensais (inclui eventuais referências de meses anteriores pagas no mesmo boleto).",
+    flag: "Salto de 27% em jun/2026 (R$18.100 → R$23.000) no mesmo mês em que a segurança terceirizada foi cancelada — nenhuma ata ou comunicado explica o reajuste.",
+    anomalies: [12]
+  },
+  jardinagem: {
+    label: "Manutenção jardinagem",
+    values: [0,0,1000.00,1000.00,1000.00,1000.00,2500.00,25576.73,0,3500.00,23502.94,0,0],
+    desc: "Linha \"Manutenção Jardinagem\" dentro de Serviços de Manutenções Recorrentes.",
+    flag: "Maior inconsistência encontrada: picos de R$25.576,73 (jan/26) e R$23.502,94 (abr/26) — de 10 a 25x o valor típico de R$1.000-3.500/mês, e zerado nos meses vizinhos (fev e mai/jun/26). Vale pedir nota fiscal e escopo do serviço desses dois meses especificamente.",
+    anomalies: [7,10]
+  },
+  pessoal: {
+    label: "Despesas com pessoal (folha própria)",
+    values: [2500.00,2500.00,2500.00,3370.79,3370.79,3370.79,4502.80,3544.94,3719.10,2639.31,3509.81,10008.79,45759.25],
+    desc: "Total do bloco \"Despesas com Pessoal\" (salário, INSS, FGTS, benefícios).",
+    flag: "Salto abrupto em jun/2026 (+357% vs. maio) com a contratação da equipe própria de segurança, coincidindo com o fim do contrato de terceirizada.",
+    anomalies: [12]
+  },
+  iptu: {
+    label: "IPTU",
+    values: [0,0,0,12421.74,12421.74,12421.74,12421.60,0,0,0,0,3127.58,3127.58],
+    desc: "Linha \"IPTU\" em Impostos e Taxas Municipais.",
+    flag: "Some completamente entre jan e abr/2026 e reaparece em mai/2026 com valor bem menor (R$3.127,58 vs. R$12.421,74). Pode ser um novo calendário de parcelas anual — mas isso não está documentado em nenhuma ata ou comunicado visto até agora.",
+    anomalies: [3,4,5,6,11,12]
+  },
+  manutencoes: {
+    label: "Manutenções recorrentes (total)",
+    values: [500.00,380.00,4228.00,3641.59,4407.80,3887.80,4102.80,27969.53,5732.80,12328.00,35648.30,10265.31,4578.95],
+    desc: "Total do bloco \"Serviços de Manutenções Recorrentes\" (jardinagem, faxina, elétrica, hidráulica, etc. somados).",
+    flag: "Os picos de jan/26 e abr/26 são puxados quase inteiramente pela linha de jardinagem (ver categoria específica).",
+    anomalies: [7,10]
+  },
+  contratos: {
+    label: "Contratos mensais (total)",
+    values: [64416.00,73122.00,65822.00,64747.00,65742.26,61917.26,62967.26,63027.26,62946.34,64582.85,64401.72,64401.72,29328.72],
+    desc: "Total do bloco \"Despesas com Contratos Mensais\" (segurança, limpeza, assessorias, seguros, fiscalização).",
+    flag: "Queda abrupta em jun/2026 é o espelho do cancelamento da terceirizada de segurança — o total do bloco caiu, mas isso não significa economia real (ver categoria \"Pessoal\").",
+    anomalies: [12]
+  },
+  impostos: {
+    label: "Impostos e taxas (total)",
+    values: [0,0,0,12433.74,14896.74,18271.74,18286.60,5850.00,11129.37,5892.92,7821.10,12741.95,9037.31],
+    desc: "Soma de Impostos e Taxas Municipais + Estaduais + Federais de cada mês.",
+    flag: "Grande variação mês a mês, puxada principalmente pelo padrão intermitente do IPTU.",
+    anomalies: []
+  },
+  despesa_total: {
+    label: "Total de despesas",
+    values: [67645.00,79770.16,77342.06,94108.25,97031.22,93391.52,98265.17,108307.05,88985.44,98061.60,122968.90,133097.31,139531.86],
+    desc: "Total de Despesas de cada balancete mensal — soma de despesas ordinárias e extraordinárias.",
+    flag: "Mais que dobrou em 13 meses (R$67.645 → R$139.532), crescimento não totalmente explicado por reajuste de taxa (que ficou congelada desde mai/2025).",
+    anomalies: []
+  },
+  receita_total: {
+    label: "Total de receitas",
+    values: [117604.22,123042.88,124990.02,125648.90,136436.00,139868.18,126845.90,131080.33,149663.50,133955.48,128063.27,172751.47,125849.18],
+    desc: "Total de Receitas de cada balancete mensal.",
+    flag: "Pico em mai/2026 (R$172.751,47) coincide com a liberação do depósito judicial e entrada de receita de acordos — mês atípico, não repetível.",
+    anomalies: [11]
+  },
+  saldo: {
+    label: "Saldo em conta",
+    values: [49974.25,93246.97,140894.93,172435.58,211840.36,258317.02,286897.75,309601.13,370279.19,406197.89,411292.26,450946.42,437263.74],
+    desc: "Saldo consolidado ao final de cada mês (todas as contas somadas).",
+    flag: "Primeira queda de saldo mês a mês em jun/2026 (-R$13.682,68) — ainda assim, o caixa é 3x maior que a despesa mensal, sem risco de caixa.",
+    anomalies: [12]
+  }
+};
+
+const fmt = v => "R$ " + v.toLocaleString("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
+const fmtShort = v => "R$" + (v/1000).toFixed(0) + "mil";
+
+let current = "seguranca";
+let chartInstance = null;
+
+function renderNav(){
+  const nav = document.getElementById("nav");
+  nav.innerHTML = "";
+  Object.keys(categories).forEach(key => {
+    const btn = document.createElement("button");
+    btn.textContent = categories[key].label;
+    btn.className = key === current ? "active" : "";
+    btn.onclick = () => { current = key; render(); };
+    nav.appendChild(btn);
+  });
+}
+
+function renderKpis(){
+  const kpis = document.getElementById("kpis");
+  const desp = categories.despesa_total.values;
+  const rec = categories.receita_total.values;
+  const sal = categories.saldo.values;
+  kpis.innerHTML = `
+    <div class="kpi"><div class="lbl">Saldo atual (jun/26)</div><div class="val">${fmtShort(sal[sal.length-1])}</div></div>
+    <div class="kpi"><div class="lbl">Despesa jun/26</div><div class="val">${fmtShort(desp[desp.length-1])}</div><div class="sub">+${(((desp[desp.length-1]/desp[0])-1)*100).toFixed(0)}% vs jun/25</div></div>
+    <div class="kpi"><div class="lbl">Receita jun/26</div><div class="val">${fmtShort(rec[rec.length-1])}</div></div>
+    <div class="kpi"><div class="lbl">Meses cobertos</div><div class="val">13</div><div class="sub">Jun/25 a Jun/26</div></div>
+  `;
+}
+
+function render(){
+  renderNav();
+  const cat = categories[current];
+  document.getElementById("catTitle").textContent = cat.label;
+  document.getElementById("catDesc").textContent = cat.desc;
+  const flagBox = document.getElementById("flagBox");
+  if(cat.flag){
+    flagBox.textContent = "⚑ " + cat.flag;
+    flagBox.classList.add("show");
+  } else {
+    flagBox.classList.remove("show");
+  }
+
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+  cat.values.forEach((v, i) => {
+    const tr = document.createElement("tr");
+    if(cat.anomalies.includes(i)) tr.classList.add("anomaly");
+    let varCell = "—";
+    if(i > 0){
+      const prev = cat.values[i-1];
+      if(prev === 0 && v > 0){
+        varCell = `<span class="var-up">novo</span>`;
+      } else if(prev > 0){
+        const pct = ((v - prev) / prev) * 100;
+        const cls = pct > 0.5 ? "var-up" : pct < -0.5 ? "var-down" : "var-flat";
+        const sign = pct > 0 ? "+" : "";
+        varCell = `<span class="${cls}">${sign}${pct.toFixed(1)}%</span>`;
+      } else {
+        varCell = "—";
+      }
+    }
+    tr.innerHTML = `<td>${months[i]}</td><td>${fmt(v)}</td><td>${varCell}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  if(chartInstance) chartInstance.destroy();
+  const ctx = document.getElementById("chart");
+  chartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: months,
+      datasets: [{
+        label: cat.label,
+        data: cat.values,
+        backgroundColor: months.map((_,i) => cat.anomalies.includes(i) ? "#e34948" : "#185fa5"),
+        borderRadius: 4,
+        maxBarThickness: 34
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display:false }, ticks: { color: "#6b675e", autoSkip:false, maxRotation:45 } },
+        y: { grid: { color: "#e3ded2" }, ticks: { color: "#6b675e", callback: v => fmtShort(v) } }
+      }
+    }
+  });
+}
+
+renderKpis();
+render();
+</script>
+</body>
+</html>
