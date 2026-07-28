@@ -2,93 +2,204 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Belmonte — Demonstrativo consolidado (Jun/25 a Jun/26)</title>
+<title>Residencial Belmonte — Diagnóstico e Proposta</title>
 <style>
   :root{
     --navy:#0d2340; --navy-2:#16305a; --gold:#c99a3d; --gold-light:#e9c877;
     --bg:#f5f3ee; --card:#ffffff; --line:#e3ded2; --text:#1c1c1a; --muted:#6b675e;
-    --up:#b23b3b; --down:#1f7a4d; --flag:#f6e6c8; --flag-text:#7a5410;
+    --red:#b23b3b; --green:#1f7a4d; --flag:#f6e6c8; --flag-text:#7a5410;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
-  header{background:var(--navy);color:#fff;padding:28px 32px 22px}
-  header h1{margin:0 0 4px;font-size:22px;font-weight:600;letter-spacing:.2px}
+  body{margin:0;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:28px 32px 20px}
+  header h1{margin:0 0 4px;font-size:21px;font-weight:600}
   header p{margin:0;color:#c9d3e2;font-size:13px}
-  .wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-34px 0 24px}
-  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;box-shadow:0 2px 10px rgba(13,35,64,.06)}
-  .kpi .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
-  .kpi .val{font-size:20px;font-weight:600;color:var(--navy)}
-  .kpi .sub{font-size:12px;color:var(--down);margin-top:2px}
-  nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-  nav button{border:1px solid var(--line);background:var(--card);color:var(--navy-2);padding:9px 14px;border-radius:20px;font-size:13px;cursor:pointer;font-weight:500}
-  nav button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
-  nav button:hover:not(.active){border-color:var(--gold)}
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:18px}
-  .panel h2{margin:0 0 4px;font-size:18px;color:var(--navy)}
-  .panel .desc{font-size:13px;color:var(--muted);margin:0 0 18px}
-  .flag-box{background:var(--flag);color:var(--flag-text);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:18px;display:none}
-  .flag-box.show{display:block}
-  canvas{max-height:220px}
-  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:13px}
-  th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  .maintabs{display:flex;gap:8px;padding:16px 20px 0;max-width:1080px;margin:0 auto;flex-wrap:wrap}
+  .maintabs button{flex:1;min-width:150px;border:1px solid var(--line);background:var(--card);color:var(--navy-2);padding:12px 14px;border-radius:10px;font-size:13.5px;font-weight:600;cursor:pointer}
+  .maintabs button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .wrap{max-width:1080px;margin:0 auto;padding:20px 20px 70px}
+  .panel{display:none}
+  .panel.active{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+  h2{font-size:17px;color:var(--navy);margin:0 0 4px}
+  .subt{font-size:12.5px;color:var(--muted);margin:0 0 16px}
+  .flag-box{background:var(--flag);color:var(--flag-text);border-radius:8px;padding:12px 14px;font-size:13px;margin:12px 0}
+  .flag-box b{display:block;margin-bottom:3px}
+
+  /* Tab1 - gastos */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .kpi .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+  .kpi .val{font-size:18px;font-weight:700;color:var(--navy)}
+  .kpi .sub{font-size:11px;color:var(--muted);margin-top:2px}
+  nav.cats{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+  nav.cats button{border:1px solid var(--line);background:var(--card);color:var(--navy-2);padding:7px 12px;border-radius:16px;font-size:12px;cursor:pointer}
+  nav.cats button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  canvas{max-height:200px}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px}
+  th,td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--line)}
   th:first-child,td:first-child{text-align:left}
-  thead th{color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.3px}
-  tbody tr:hover{background:#faf8f3}
-  .var-up{color:var(--up);font-weight:500}
-  .var-down{color:var(--down);font-weight:500}
-  .var-flat{color:var(--muted)}
-  .anomaly{background:var(--flag)}
-  .anomaly td:first-child::before{content:"⚑ ";color:var(--flag-text)}
-  footer{max-width:1080px;margin:0 auto;padding:0 20px 50px;font-size:12px;color:var(--muted);line-height:1.7}
-  footer h3{font-size:13px;color:var(--navy);margin:20px 0 6px}
-  .src-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 16px}
-  @media (max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}.src-grid{grid-template-columns:repeat(2,1fr)}}
+  thead th{color:var(--muted);font-weight:500;font-size:10.5px;text-transform:uppercase}
+  .var-up{color:var(--red);font-weight:500}
+  .var-down{color:var(--green);font-weight:500}
+
+  /* Tab2 - problemas */
+  .prob{border-left:3px solid var(--red);padding:10px 16px;margin-bottom:14px;background:#fdf6f5;border-radius:0 8px 8px 0}
+  .prob h3{margin:0 0 6px;font-size:14.5px;color:var(--navy)}
+  .prob p{margin:0;font-size:13px}
+  .role-chip{display:inline-block;background:var(--navy);color:#fff;font-size:11px;padding:3px 9px;border-radius:10px;margin:2px 4px 2px 0}
+
+  /* Tab3 - solucao */
+  .struct-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:700px){.struct-grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+  .struct-card{border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .struct-card h4{margin:0 0 6px;font-size:13.5px;color:var(--gold-text,var(--navy));display:flex;align-items:center;gap:6px}
+  .struct-card h4::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block}
+  .struct-card p{margin:0;font-size:12.5px;color:var(--text)}
+  .verdict{background:var(--navy);color:#fff;border-radius:10px;padding:16px 18px;font-size:13.5px;margin-top:14px}
+  .verdict b{color:var(--gold-light)}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Residencial Belmonte — Demonstrativo consolidado</h1>
-  <p>13 balancetes mensais (Jun/2025 a Jun/2026) reunidos a partir dos PDFs oficiais da B&amp;S Administradora</p>
+  <h1>Residencial Belmonte — Proposta de Nova Gestão</h1>
+  <p>Um levantamento independente dos números do condomínio e uma proposta concreta para a próxima gestão</p>
 </header>
 
+<div class="maintabs" id="maintabs"></div>
+
 <div class="wrap">
-  <div class="kpis" id="kpis"></div>
 
-  <nav id="nav"></nav>
-
-  <div class="panel">
-    <h2 id="catTitle"></h2>
-    <p class="desc" id="catDesc"></p>
-    <div class="flag-box" id="flagBox"></div>
-    <canvas id="chart"></canvas>
-    <table>
-      <thead><tr><th>Mês</th><th>Valor (R$)</th><th>Variação vs. mês anterior</th></tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
+  <!-- PANEL 1: GASTOS -->
+  <div class="panel" id="panel-gastos">
+    <div class="card">
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Saldo atual (jun/26)</div><div class="val">R$437mil</div></div>
+        <div class="kpi"><div class="lbl">Despesa jun/26</div><div class="val">R$140mil</div><div class="sub">+106% vs jun/25</div></div>
+        <div class="kpi"><div class="lbl">Receita jun/26</div><div class="val">R$126mil</div></div>
+        <div class="kpi"><div class="lbl">Meses cobertos</div><div class="val">13</div><div class="sub">Jun/25 a Jun/26</div></div>
+      </div>
+      <nav class="cats" id="cats"></nav>
+      <h2 id="catTitle"></h2>
+      <p class="subt" id="catDesc"></p>
+      <div class="flag-box" id="flagBox"></div>
+      <canvas id="chart"></canvas>
+      <table>
+        <thead><tr><th>Mês</th><th>Valor (R$)</th><th>Variação</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
   </div>
+
+  <!-- PANEL 2: PROBLEMAS -->
+  <div class="panel" id="panel-problemas">
+    <div class="card">
+      <h2>Pontos de melhoria identificados</h2>
+      <p class="subt">A partir de um estudo independente dos balancetes, atas e registros públicos do condomínio — organizados aqui por área de gestão, não por pessoa, para focar na solução</p>
+
+      <div class="prob">
+        <h3>Presidência da Associação e propriedade do loteamento</h3>
+        <span class="role-chip">Presidência da Associação</span>
+        <p>Segundo o projeto urbanístico oficial do empreendimento (documento público, registrado em cartório), a atual presidência da Associação consta como um dos proprietários do loteamento, em sociedade com a incorporadora responsável pela implantação. É uma informação de registro público, disponível a qualquer morador que consulte a matrícula.</p>
+      </div>
+
+      <div class="prob">
+        <h3>Governança do loteamento ainda pouco esclarecida</h3>
+        <span class="role-chip">Incorporadora do loteamento</span>
+        <span class="role-chip">Sócios da estrutura fundiária</span>
+        <p>Já existiu discussão judicial sobre quem controla o voto dos lotes ainda não vendidos. Ficou decidido a favor da forma atual de representação, mas mostra que vale deixar essa regra clara e blindada no futuro, pra não depender de interpretação.</p>
+      </div>
+
+      <div class="prob">
+        <h3>Cobrança de valores ainda em discussão</h3>
+        <span class="role-chip">Incorporadora do loteamento</span>
+        <span class="role-chip">Representação legal da Associação</span>
+        <p>Existe uma discussão em andamento sobre o valor correto cobrado dos lotes ainda não comercializados. Um depósito de R$176,8 mil já foi destinado à Associação, mas o valor final ainda não foi definido — mais um motivo pra ter regras de cobrança bem documentadas e públicas.</p>
+      </div>
+
+      <div class="prob">
+        <h3>Contagem de lotes precisa de atualização</h3>
+        <span class="role-chip">Cadastro de lotes da Associação</span>
+        <p>O projeto urbanístico oficial mostra 704 unidades residenciais + 81 de uso misto, mais que o dobro dos ~381 lotes hoje reconhecidos pela Associação. Vale atualizar esse cadastro com base na matrícula — pode representar mais moradores com direito a voz, e uma base de rateio mais justa pra todos.</p>
+      </div>
+
+      <div class="prob">
+        <h3>Espaço pra mais transparência com prestadores</h3>
+        <span class="role-chip">Contratos de segurança, limpeza e jardinagem</span>
+        <p>Hoje os balancetes mostram só o valor total pago por categoria, sem nota fiscal, CNPJ ou contrato anexado. Alguns meses tiveram picos pontuais bem acima da média (ex: jardinagem chegando a R$25,6 mil num mês só) que merecem explicação documentada — não porque algo esteja errado, mas porque todo morador tem direito de entender pra onde vai o dinheiro.</p>
+      </div>
+
+      <div class="prob">
+        <h3>Equipe própria sem rede de proteção jurídica</h3>
+        <span class="role-chip">Equipe própria (folha CLT)</span>
+        <p>A contratação de equipe própria de segurança é uma boa iniciativa de redução de custo, mas ainda não aparece com suporte de assessoria trabalhista dedicada nem provisão de contingência — algo simples de resolver e que protege tanto o condomínio quanto os próprios funcionários.</p>
+      </div>
+
+      <div class="prob">
+        <h3>Dinheiro em caixa pode render mais</h3>
+        <span class="role-chip">Gestão financeira</span>
+        <p>O condomínio tem uma reserva financeira saudável (R$437 mil), mas ela está praticamente toda parada em conta corrente sem render. Aplicá-la de forma simples e conservadora poderia gerar entre R$3,5 e R$4,5 mil por mês — dinheiro que já poderia estar sendo revertido em benefício de todos, sem cortar nenhum gasto.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: SOLUCAO -->
+  <div class="panel" id="panel-solucao">
+    <div class="card">
+      <h2>Proposta: uma empresa de gestão predial dos próprios moradores</h2>
+      <p class="subt">Uma estrutura pensada para dar mais eficiência, transparência e retorno financeiro a cada morador — desenhada a partir dos pontos de melhoria da seção anterior</p>
+
+      <div class="struct-grid">
+        <div class="struct-card">
+          <h4>Formato jurídico</h4>
+          <p>Sociedade Limitada (Ltda) com contrato social customizado — menor custo de constituição e manutenção entre as opções avaliadas (Ltda, Cooperativa, S.A.).</p>
+        </div>
+        <div class="struct-card">
+          <h4>Quadro societário</h4>
+          <p>Cada proprietário de lote individualizado e titulado se torna sócio-quotista automaticamente.</p>
+        </div>
+        <div class="struct-card">
+          <h4>Quota vinculada ao lote</h4>
+          <p>1 lote = 1 fração de quota, averbada na matrícula. Não pode ser vendida separada do imóvel — transfere junto, automaticamente.</p>
+        </div>
+        <div class="struct-card">
+          <h4>Voto igualitário</h4>
+          <p>1 sócio = 1 voto em assembleia, independente de quantos lotes/quotas possua — impede concentração de poder por quem acumula muitos lotes.</p>
+        </div>
+        <div class="struct-card">
+          <h4>Lucro proporcional</h4>
+          <p>Distribuição de resultado proporcional ao número de quotas/lotes — 90% distribuído (compensável no boleto do condomínio), 10% retido como reserva.</p>
+        </div>
+        <div class="struct-card">
+          <h4>Capital inicial</h4>
+          <p>Aporte semente de parte do fundo de reserva atual da Associação + aporte simbólico por lote.</p>
+        </div>
+        <div class="struct-card">
+          <h4>Gestão profissional</h4>
+          <p>Diretor-Executivo contratado por resultado (não precisa ser sócio), subordinado a Conselho de Administração eleito com mandato fixo.</p>
+        </div>
+        <div class="struct-card">
+          <h4>Fiscalização</h4>
+          <p>Conselho Fiscal + auditoria contábil independente anual — resolve a falta de transparência identificada nos balancetes atuais.</p>
+        </div>
+        <div class="struct-card">
+          <h4>Contrato com a Associação</h4>
+          <p>Preço de mercado, cotação obrigatória, aprovado em assembleia dos dois lados.</p>
+        </div>
+        <div class="struct-card">
+          <h4>Impedimento de conflito</h4>
+          <p>Sócio ou administrador com interesse direto numa decisão é obrigado a se abster do voto correspondente.</p>
+        </div>
+      </div>
+
+      <div class="verdict">
+        Essa estrutura foi pensada para <b>reduzir custos com mais eficiência</b>, <b>trazer transparência total</b> com auditoria independente, <b>proteger todos os moradores</b> do risco jurídico das contratações, e <b>garantir que ninguém concentre poder de voto</b> sozinho — tudo isso enquanto ainda devolve parte do lucro pra cada morador, reduzindo o valor efetivo do condomínio ao longo do tempo.
+      </div>
+    </div>
+  </div>
+
 </div>
-
-<footer>
-  <h3>Fontes (balancetes originais em PDF, B&amp;S Administradora de Condomínios)</h3>
-  <div class="src-grid">
-    <div>Jun/2025 — Demonstrativo Jun/2025 (detalhado)</div>
-    <div>Jul/2025 — Demonstrativo Jul/2025 (detalhado)</div>
-    <div>Ago/2025 — Demonstrativo Ago/2025 (detalhado)</div>
-    <div>Set/2025 — Demonstrativo Set/2025</div>
-    <div>Out/2025 — Demonstrativo Out/2025</div>
-    <div>Nov/2025 — Demonstrativo Nov/2025</div>
-    <div>Dez/2025 — Demonstrativo Dez/2025</div>
-    <div>Jan/2026 — Demonstrativo Jan/2026</div>
-    <div>Fev/2026 — Demonstrativo Fev/2026</div>
-    <div>Mar/2026 — Demonstrativo Mar/2026</div>
-    <div>Abr/2026 — Demonstrativo Abr/2026</div>
-    <div>Mai/2026 — Demonstrativo Mai/2026</div>
-    <div>Jun/2026 — Demonstrativo Jun/2026</div>
-  </div>
-  <p style="margin-top:14px">Este documento é um consolidado independente para conferência dos associados — em caso de dúvida sobre qualquer valor, o PDF de origem do mês correspondente deve ser solicitado à administradora B&amp;S ou consultado no portal Superlógica (bscondominial.superlogica.net). Os campos sinalizados com ⚑ indicam variações fora do padrão que ainda não têm explicação documentada em ata ou comunicado.</p>
-</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
@@ -99,35 +210,35 @@ const categories = {
     label: "Segurança terceirizada",
     values: [44144.00,51600.00,45000.00,42525.00,42525.00,39150.00,39600.00,39600.00,39579.08,39579.08,39600.00,39600.00,450.00],
     desc: "Linha \"Terceirizada Segurança\" em Despesas com Contratos Mensais. Nenhum balancete traz o CNPJ ou nome da empresa prestadora.",
-    flag: "INFERÊNCIA, não fato documentado: o valor cai para R$450 residual em jun/2026, no mesmo mês em que \"Despesas com Pessoal\" salta (ver categoria \"Pessoal\") — os números sugerem fim do contrato de terceirização, mas nenhuma ata ou comunicado confirma isso por escrito. Vale pedir confirmação formal. Também sem explicação: o valor variou entre R$39.579,08 e R$39.600,00 em meses adjacentes (fev–mar/2026).",
+    flag: "A confirmar com a Diretoria: o valor cai para R$450 residual em jun/2026, no mesmo mês em que \"Despesas com Pessoal\" salta (ver categoria \"Pessoal\") — os números sugerem fim do contrato de terceirização, mas ainda não há confirmação por escrito. Também sem explicação: o valor variou entre R$39.579,08 e R$39.600,00 em meses adjacentes (fev–mar/2026).",
     anomalies: [12]
   },
   limpeza: {
     label: "Limpeza terceirizada",
     values: [17200.00,18450.00,17750.00,17500.00,17500.00,17500.00,18100.00,18100.00,18100.00,18100.00,18100.00,18100.00,23000.00],
-    desc: "Linha \"Terceirizada Limpeza\" em Despesas com Contratos Mensais (inclui eventuais referências de meses anteriores pagas no mesmo boleto). Nenhum balancete traz o CNPJ ou nome da empresa prestadora — não dá pra confirmar se é a mesma empresa da categoria \"Manutenção jardinagem\" ou uma diferente.",
-    flag: "Salto de 27% em jun/2026 (R$18.100 → R$23.000) no mesmo mês em que a segurança terceirizada foi cancelada — nenhuma ata ou comunicado explica o reajuste.",
+    desc: "Linha \"Terceirizada Limpeza\" em Despesas com Contratos Mensais (inclui eventuais referências de meses anteriores pagas no mesmo boleto). Nenhum balancete traz o CNPJ ou nome da empresa prestadora.",
+    flag: "Salto de 27% em jun/2026 (R$18.100 → R$23.000) no mesmo mês em que a segurança terceirizada foi encerrada — vale esclarecer o motivo do reajuste.",
     anomalies: [12]
   },
   jardinagem: {
     label: "Manutenção jardinagem",
     values: [0,0,1000.00,1000.00,1000.00,1000.00,2500.00,25576.73,0,3500.00,23502.94,0,0],
     desc: "Linha \"Manutenção Jardinagem\" dentro de Serviços de Manutenções Recorrentes. Nenhum balancete traz o CNPJ ou nome do prestador.",
-    flag: "Maior inconsistência encontrada: picos de R$25.576,73 (jan/26) e R$23.502,94 (abr/26) — de 10 a 25x o valor típico de R$1.000-3.500/mês, e zerado nos meses vizinhos (fev e mai/jun/26). Vale pedir nota fiscal e escopo do serviço desses dois meses especificamente.",
+    flag: "Maior variação encontrada: picos de R$25.576,73 (jan/26) e R$23.502,94 (abr/26) — de 10 a 25x o valor típico de R$1.000-3.500/mês, zerado nos meses vizinhos. Vale pedir nota fiscal e escopo do serviço desses dois meses.",
     anomalies: [7,10]
   },
   pessoal: {
     label: "Despesas com pessoal (folha própria)",
     values: [2500.00,2500.00,2500.00,3370.79,3370.79,3370.79,4502.80,3544.94,3719.10,2639.31,3509.81,10008.79,45759.25],
     desc: "Total do bloco \"Despesas com Pessoal\" (salário, INSS, FGTS, benefícios).",
-    flag: "INFERÊNCIA, não fato documentado: o salto de +357% vs. maio coincide com a queda da terceirizada de segurança para R$450 (ver categoria \"Segurança\"), o que sugere contratação de equipe própria — mas nenhum documento visto até agora confirma essa relação por escrito.",
+    flag: "Salto de +357% vs. maio coincide com a queda da terceirizada de segurança (ver categoria \"Segurança\") — sugere contratação de equipe própria, sem linha de assessoria trabalhista nem provisão de contingência visível.",
     anomalies: [12]
   },
   iptu: {
     label: "IPTU",
     values: [0,0,0,12421.74,12421.74,12421.74,12421.60,0,0,0,0,3127.58,3127.58],
     desc: "Linha \"IPTU\" em Impostos e Taxas Municipais.",
-    flag: "Some completamente entre jan e abr/2026 e reaparece em mai/2026 com valor bem menor (R$3.127,58 vs. R$12.421,74). Pode ser um novo calendário de parcelas anual — mas isso não está documentado em nenhuma ata ou comunicado visto até agora.",
+    flag: "Some completamente entre jan e abr/2026 e reaparece em mai/2026 com valor bem menor (R$3.127,58 vs. R$12.421,74). Pode ser um novo calendário de parcelas anual — vale confirmar o motivo.",
     anomalies: [3,4,5,6,11,12]
   },
   manutencoes: {
@@ -141,7 +252,7 @@ const categories = {
     label: "Contratos mensais (total)",
     values: [64416.00,73122.00,65822.00,64747.00,65742.26,61917.26,62967.26,63027.26,62946.34,64582.85,64401.72,64401.72,29328.72],
     desc: "Total do bloco \"Despesas com Contratos Mensais\" (segurança, limpeza, assessorias, seguros, fiscalização).",
-    flag: "Queda abrupta em jun/2026 é o espelho do cancelamento da terceirizada de segurança — o total do bloco caiu, mas isso não significa economia real (ver categoria \"Pessoal\").",
+    flag: "Queda abrupta em jun/2026 é o espelho do fim da terceirizada de segurança — não representa economia real, já que a folha de Pessoal sobe na mesma proporção.",
     anomalies: [12]
   },
   impostos: {
@@ -169,14 +280,14 @@ const categories = {
     label: "Saldo em conta",
     values: [49974.25,93246.97,140894.93,172435.58,211840.36,258317.02,286897.75,309601.13,370279.19,406197.89,411292.26,450946.42,437263.74],
     desc: "Saldo consolidado ao final de cada mês (todas as contas somadas).",
-    flag: "Primeira queda de saldo mês a mês em jun/2026 (-R$13.682,68) — ainda assim, o caixa é 3x maior que a despesa mensal, sem risco de caixa.",
+    flag: "Primeira queda de saldo mês a mês em jun/2026 (-R$13.682,68) — ainda assim, o caixa é 3x maior que a despesa mensal, sem risco de caixa. O condomínio tem folga financeira real.",
     anomalies: [12]
   },
   rendimento: {
     label: "Rendimento financeiro ⚠",
     values: [0,0,0,0,0,0,0,0.02,0,0,0,0,0],
     desc: "Linha \"Rendimento de Aplicação Financeira\", quando aparece nas Receitas Extraordinárias.",
-    flag: "Achado mais relevante da planilha: em 13 meses, essa linha só apareceu UMA vez — em jan/2026, no valor de R$0,02 — sobre um saldo que já girava perto de R$300 mil. Isso indica que o dinheiro fica parado em conta corrente, não em nenhuma aplicação remunerada. Com a Selic atual em 14,25% a.a. (~1,1% ao mês), um saldo médio de R$400 mil aplicado em algo simples e de baixo risco (CDB de liquidez diária, fundo DI) renderia hoje algo entre R$3.500 e R$4.500 por mês — dinheiro perdido todo mês sem necessidade de cortar nenhum gasto para recuperá-lo.",
+    flag: "Oportunidade de melhoria: em 13 meses, essa linha só apareceu uma vez — em jan/2026, R$0,02 — sobre um saldo que já girava perto de R$300 mil. O dinheiro fica parado em conta corrente. Com a Selic atual em 14,25% a.a., um saldo médio de R$400 mil bem aplicado renderia hoje algo entre R$3.500 e R$4.500 por mês, sem precisar cortar nenhum gasto.",
     anomalies: [7]
   }
 };
@@ -184,64 +295,43 @@ const categories = {
 const fmt = v => "R$ " + v.toLocaleString("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
 const fmtShort = v => "R$" + (v/1000).toFixed(0) + "mil";
 
-let current = "seguranca";
+let currentCat = "seguranca";
 let chartInstance = null;
 
-function renderNav(){
-  const nav = document.getElementById("nav");
+function renderCats(){
+  const nav = document.getElementById("cats");
   nav.innerHTML = "";
   Object.keys(categories).forEach(key => {
     const btn = document.createElement("button");
     btn.textContent = categories[key].label;
-    btn.className = key === current ? "active" : "";
-    btn.onclick = () => { current = key; render(); };
+    btn.className = key === currentCat ? "active" : "";
+    btn.onclick = () => { currentCat = key; renderGastos(); };
     nav.appendChild(btn);
   });
 }
 
-function renderKpis(){
-  const kpis = document.getElementById("kpis");
-  const desp = categories.despesa_total.values;
-  const rec = categories.receita_total.values;
-  const sal = categories.saldo.values;
-  kpis.innerHTML = `
-    <div class="kpi"><div class="lbl">Saldo atual (jun/26)</div><div class="val">${fmtShort(sal[sal.length-1])}</div></div>
-    <div class="kpi"><div class="lbl">Despesa jun/26</div><div class="val">${fmtShort(desp[desp.length-1])}</div><div class="sub">+${(((desp[desp.length-1]/desp[0])-1)*100).toFixed(0)}% vs jun/25</div></div>
-    <div class="kpi"><div class="lbl">Receita jun/26</div><div class="val">${fmtShort(rec[rec.length-1])}</div></div>
-    <div class="kpi"><div class="lbl">Meses cobertos</div><div class="val">13</div><div class="sub">Jun/25 a Jun/26</div></div>
-  `;
-}
-
-function render(){
-  renderNav();
-  const cat = categories[current];
+function renderGastos(){
+  renderCats();
+  const cat = categories[currentCat];
   document.getElementById("catTitle").textContent = cat.label;
   document.getElementById("catDesc").textContent = cat.desc;
   const flagBox = document.getElementById("flagBox");
-  if(cat.flag){
-    flagBox.textContent = "⚑ " + cat.flag;
-    flagBox.classList.add("show");
-  } else {
-    flagBox.classList.remove("show");
-  }
+  if(cat.flag){ flagBox.textContent = "⚑ " + cat.flag; flagBox.style.display="block"; }
+  else { flagBox.style.display="none"; }
 
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
   cat.values.forEach((v, i) => {
     const tr = document.createElement("tr");
-    if(cat.anomalies.includes(i)) tr.classList.add("anomaly");
     let varCell = "—";
     if(i > 0){
       const prev = cat.values[i-1];
-      if(prev === 0 && v > 0){
-        varCell = `<span class="var-up">novo</span>`;
-      } else if(prev > 0){
+      if(prev === 0 && v > 0){ varCell = `<span class="var-up">novo</span>`; }
+      else if(prev > 0){
         const pct = ((v - prev) / prev) * 100;
-        const cls = pct > 0.5 ? "var-up" : pct < -0.5 ? "var-down" : "var-flat";
+        const cls = pct > 0.5 ? "var-up" : pct < -0.5 ? "var-down" : "";
         const sign = pct > 0 ? "+" : "";
         varCell = `<span class="${cls}">${sign}${pct.toFixed(1)}%</span>`;
-      } else {
-        varCell = "—";
       }
     }
     tr.innerHTML = `<td>${months[i]}</td><td>${fmt(v)}</td><td>${varCell}</td>`;
@@ -252,30 +342,42 @@ function render(){
   const ctx = document.getElementById("chart");
   chartInstance = new Chart(ctx, {
     type: "bar",
-    data: {
-      labels: months,
-      datasets: [{
-        label: cat.label,
-        data: cat.values,
-        backgroundColor: months.map((_,i) => cat.anomalies.includes(i) ? "#e34948" : "#185fa5"),
-        borderRadius: 4,
-        maxBarThickness: 34
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { display:false }, ticks: { color: "#6b675e", autoSkip:false, maxRotation:45 } },
-        y: { grid: { color: "#e3ded2" }, ticks: { color: "#6b675e", callback: v => fmtShort(v) } }
-      }
-    }
+    data: { labels: months, datasets: [{ data: cat.values,
+      backgroundColor: months.map((_,i) => cat.anomalies.includes(i) ? "#e34948" : "#185fa5"),
+      borderRadius: 4, maxBarThickness: 30 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{grid:{display:false},ticks:{color:"#6b675e",maxRotation:45}},
+               y:{grid:{color:"#e3ded2"},ticks:{color:"#6b675e",callback:v=>fmtShort(v)}} } }
   });
 }
 
-renderKpis();
-render();
+const mainTabs = [
+  {id:"gastos", label:"1. Gastos do condomínio"},
+  {id:"problemas", label:"2. Problemas encontrados"},
+  {id:"solucao", label:"3. Solução proposta"}
+];
+let currentMain = "gastos";
+
+function renderMainTabs(){
+  const el = document.getElementById("maintabs");
+  el.innerHTML = "";
+  mainTabs.forEach(t => {
+    const btn = document.createElement("button");
+    btn.textContent = t.label;
+    btn.className = t.id === currentMain ? "active" : "";
+    btn.onclick = () => { currentMain = t.id; renderMain(); };
+    el.appendChild(btn);
+  });
+}
+
+function renderMain(){
+  renderMainTabs();
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("panel-" + currentMain).classList.add("active");
+  if(currentMain === "gastos") renderGastos();
+}
+
+renderMain();
 </script>
 </body>
 </html>
