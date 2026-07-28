@@ -98,21 +98,21 @@ const categories = {
   seguranca: {
     label: "Segurança terceirizada",
     values: [44144.00,51600.00,45000.00,42525.00,42525.00,39150.00,39600.00,39600.00,39579.08,39579.08,39600.00,39600.00,450.00],
-    desc: "Linha \"Terceirizada Segurança\" em Despesas com Contratos Mensais.",
-    flag: "Contrato encerrado em jun/2026 (R$450 residual) e substituído por equipe própria — ver categoria \"Pessoal\". Valor variou entre R$39.579,08 e R$39.600,00 em meses adjacentes sem explicação (fev–mar/2026).",
+    desc: "Linha \"Terceirizada Segurança\" em Despesas com Contratos Mensais. Nenhum balancete traz o CNPJ ou nome da empresa prestadora.",
+    flag: "INFERÊNCIA, não fato documentado: o valor cai para R$450 residual em jun/2026, no mesmo mês em que \"Despesas com Pessoal\" salta (ver categoria \"Pessoal\") — os números sugerem fim do contrato de terceirização, mas nenhuma ata ou comunicado confirma isso por escrito. Vale pedir confirmação formal. Também sem explicação: o valor variou entre R$39.579,08 e R$39.600,00 em meses adjacentes (fev–mar/2026).",
     anomalies: [12]
   },
   limpeza: {
     label: "Limpeza terceirizada",
     values: [17200.00,18450.00,17750.00,17500.00,17500.00,17500.00,18100.00,18100.00,18100.00,18100.00,18100.00,18100.00,23000.00],
-    desc: "Linha \"Terceirizada Limpeza\" em Despesas com Contratos Mensais (inclui eventuais referências de meses anteriores pagas no mesmo boleto).",
+    desc: "Linha \"Terceirizada Limpeza\" em Despesas com Contratos Mensais (inclui eventuais referências de meses anteriores pagas no mesmo boleto). Nenhum balancete traz o CNPJ ou nome da empresa prestadora — não dá pra confirmar se é a mesma empresa da categoria \"Manutenção jardinagem\" ou uma diferente.",
     flag: "Salto de 27% em jun/2026 (R$18.100 → R$23.000) no mesmo mês em que a segurança terceirizada foi cancelada — nenhuma ata ou comunicado explica o reajuste.",
     anomalies: [12]
   },
   jardinagem: {
     label: "Manutenção jardinagem",
     values: [0,0,1000.00,1000.00,1000.00,1000.00,2500.00,25576.73,0,3500.00,23502.94,0,0],
-    desc: "Linha \"Manutenção Jardinagem\" dentro de Serviços de Manutenções Recorrentes.",
+    desc: "Linha \"Manutenção Jardinagem\" dentro de Serviços de Manutenções Recorrentes. Nenhum balancete traz o CNPJ ou nome do prestador.",
     flag: "Maior inconsistência encontrada: picos de R$25.576,73 (jan/26) e R$23.502,94 (abr/26) — de 10 a 25x o valor típico de R$1.000-3.500/mês, e zerado nos meses vizinhos (fev e mai/jun/26). Vale pedir nota fiscal e escopo do serviço desses dois meses especificamente.",
     anomalies: [7,10]
   },
@@ -120,7 +120,7 @@ const categories = {
     label: "Despesas com pessoal (folha própria)",
     values: [2500.00,2500.00,2500.00,3370.79,3370.79,3370.79,4502.80,3544.94,3719.10,2639.31,3509.81,10008.79,45759.25],
     desc: "Total do bloco \"Despesas com Pessoal\" (salário, INSS, FGTS, benefícios).",
-    flag: "Salto abrupto em jun/2026 (+357% vs. maio) com a contratação da equipe própria de segurança, coincidindo com o fim do contrato de terceirizada.",
+    flag: "INFERÊNCIA, não fato documentado: o salto de +357% vs. maio coincide com a queda da terceirizada de segurança para R$450 (ver categoria \"Segurança\"), o que sugere contratação de equipe própria — mas nenhum documento visto até agora confirma essa relação por escrito.",
     anomalies: [12]
   },
   iptu: {
@@ -171,6 +171,13 @@ const categories = {
     desc: "Saldo consolidado ao final de cada mês (todas as contas somadas).",
     flag: "Primeira queda de saldo mês a mês em jun/2026 (-R$13.682,68) — ainda assim, o caixa é 3x maior que a despesa mensal, sem risco de caixa.",
     anomalies: [12]
+  },
+  rendimento: {
+    label: "Rendimento financeiro ⚠",
+    values: [0,0,0,0,0,0,0,0.02,0,0,0,0,0],
+    desc: "Linha \"Rendimento de Aplicação Financeira\", quando aparece nas Receitas Extraordinárias.",
+    flag: "Achado mais relevante da planilha: em 13 meses, essa linha só apareceu UMA vez — em jan/2026, no valor de R$0,02 — sobre um saldo que já girava perto de R$300 mil. Isso indica que o dinheiro fica parado em conta corrente, não em nenhuma aplicação remunerada. Com a Selic atual em 14,25% a.a. (~1,1% ao mês), um saldo médio de R$400 mil aplicado em algo simples e de baixo risco (CDB de liquidez diária, fundo DI) renderia hoje algo entre R$3.500 e R$4.500 por mês — dinheiro perdido todo mês sem necessidade de cortar nenhum gasto para recuperá-lo.",
+    anomalies: [7]
   }
 };
 
